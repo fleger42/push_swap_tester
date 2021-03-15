@@ -14,7 +14,7 @@ You must be on a Linux distribution.
 
 ***Be careful, this tester doesnt test the Norm !***
 # **All test good** 
-![good_image](push_swap_testeur_good.png)
+![good_image](img/push_swap_testeur_good.png)
 
 # **If you have an error** 
-![bad_image](push_swap_testeur_bad.png)
+![bad_image](img/push_swap_testeur_bad.png)
