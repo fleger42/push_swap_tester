@@ -125,7 +125,7 @@ then
 		exit 1
 	fi
 	optitest 2
-	printf $BOLDBLUE"\nFor size = 3 : Average = $O_RET and biggest = $BIGGEST !$RESET\n"
+	printf $BOLDCYAN"\nFor size = 3 : Average = $O_RET and biggest = $BIGGEST !$RESET\n"
 	if [[ $BIGGEST -gt 3 ]]
 	then
 		printf $BOLDRED"Fail optimisation test with size = 3. You must have 3 instruction max$RESET\n"
@@ -133,7 +133,7 @@ then
 		printf $BOLDGREEN"Good optimisation with size = 3.$RESET\n"
 	fi
 	optitest 4
-	printf $BOLDBLUE"\nFor size = 5 : Average = $O_RET and biggest = $BIGGEST !$RESET\n"
+	printf $BOLDCYAN"\nFor size = 5 : Average = $O_RET and biggest = $BIGGEST !$RESET\n"
 	if [[ $BIGGEST -gt 12 ]]
 	then
 		printf $BOLDRED"Fail optimisation test with size = 5. You must have 12 instruction max$RESET\n"
@@ -141,7 +141,7 @@ then
 		printf $BOLDGREEN"Good optimisation with size = 5.$RESET\n"
 	fi
 	optitest 99
-	printf $BOLDBLUE"\nFor size = 100 : Average = $O_RET and biggest = $BIGGEST !$RESET\n"
+	printf $BOLDCYAN"\nFor size = 100 : Average = $O_RET and biggest = $BIGGEST !$RESET\n"
 	if [[ $O_RET -lt 700 ]]
 	then
 		printf $BOLDGREEN"Considering the barem, you have 5/5 with size = 100\n$RESET"
@@ -159,22 +159,22 @@ then
 		printf $BOLDRED"Considering the barem, you have 1/5 with size = 100\n$RESET"
 	fi
 	optitest 499
-	printf $BOLDBLUE"\nFor size = 500 : Average = $O_RET and biggest = $BIGGEST !$RESET\n"
+	printf $BOLDCYAN"\nFor size = 500 : Average = $O_RET and biggest = $BIGGEST !$RESET\n"
 	if [[ $O_RET -lt 5500 ]]
 	then
-		printf $BOLDGREEN"Considering the barem, you have 5/5 with size = 100\n$RESET"
+		printf $BOLDGREEN"Considering the barem, you have 5/5 with size = 500\n$RESET"
 	elif [[ $O_RET -lt 7000 ]]
 	then	
-		printf $BOLDGREEN"Considering the barem, you have 4/5 with size = 100\n$RESET"
+		printf $BOLDGREEN"Considering the barem, you have 4/5 with size = 500\n$RESET"
 	elif [[ $O_RET -lt 8500 ]]
 	then	
-		printf $BOLDYELLOW"Considering the barem, you have 3/5 with size = 100\n$RESET"
+		printf $BOLDYELLOW"Considering the barem, you have 3/5 with size = 500\n$RESET"
 	elif [[ $O_RET -lt 10000 ]]
 	then	
-		printf $BOLDYELLOW"Considering the barem, you have 2/5 with size = 100\n$RESET"
+		printf $BOLDYELLOW"Considering the barem, you have 2/5 with size = 500\n$RESET"
 	elif [[ $O_RET -lt 11500 ]]
 	then	
-		printf $BOLDRED"Considering the barem, you have 1/5 with size = 100\n$RESET"
+		printf $BOLDRED"Considering the barem, you have 1/5 with size = 500\n$RESET"
 	fi
     exit 0
 fi
