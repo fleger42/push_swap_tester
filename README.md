@@ -4,7 +4,7 @@ You must be on a Linux distribution.
 ## Usage:
 1) Clone this repository in your project folder.
 2) Enter in the new repository you just cloned.
-3) Launch : "bash push_swap_tester.sh"
+3) Launch : "bash push_swap_tester.sh" for all test
 
 `Exemple: bash push_swap_tester.sh`
 
