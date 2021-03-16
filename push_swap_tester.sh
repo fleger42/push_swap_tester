@@ -42,23 +42,25 @@ function basetest()
 		exit 0
 	fi
 	TOTAL=$WHITE
-	NBR=0
 	NBR_ERROR=0
 	let "NBR_TEST=$2 - $1"
-	printf $BOLDYELLOW"Begin test of $BOLDRED$NBR_TEST$BOLDYELLOW random list from $BOLDRED$1$BOLDYELLOW to $BOLDRED$2$BOLDYELLOW!$RESET\n"
+	printf $BOLDYELLOW"Begin basic test of $BOLDRED$NBR_TEST$BOLDYELLOW random list from size $BOLDRED$1$BOLDYELLOW to $BOLDRED$2$BOLDYELLOW!$RESET\n"
+	sleep 3
 	for NBR in `seq $1 $2`;
 	do
+		INSTRUCT=0
 		LIST=$(perl -e "use List::Util 'shuffle'; my @out = (shuffle 0..$NBR)[0..$NBR]; print \"@out\"")
 		set -v
-		ARG=${LIST[@]}; ./push_swap $ARG | ./checker $ARG > /dev/null
+		ARG=${LIST[@]}; ./push_swap $ARG > output.txt ; cat output.txt | ./checker $ARG > /dev/null
+		INSTRUCT=$(wc -l < "output.txt")
 		RET=$?
 		if [[ $RET != 0 ]] 
 		then
-			printf $BOLDRED"Fail$RESET with size $TOTAL$NBR/$2$RESET\n"
+			printf $BOLDRED"Fail$RESET"" in $BOLDRED$INSTRUCT$RESET instructions with size = $TOTAL$NBR/$2$RESET\n"
 			echo "LIST = "${LIST[@]}
 			let "NBR_ERROR=NBR_ERROR+1"
 		else
-			printf $BOLDGREEN"Success$RESET with size $TOTAL$NBR/$2$RESET\n"
+			printf $BOLDGREEN"Success$RESET"" in $BOLDRED$INSTRUCT$RESET instructions with size = $TOTAL$NBR/$2$RESET\n"
 			echo "LIST = "${LIST[@]}
 			echo 
 		fi
@@ -69,7 +71,7 @@ function basetest()
 		fi
 		if [[ $NBR = 200 ]] 
 		then
-			TOTAL=$BLUE
+			TOTAL=$BOLDCYAN
 		fi
 		if [[ $NBR = 300 ]] 
 		then
@@ -90,17 +92,96 @@ function basetest()
 	else
 		printf $BOLDGREEN"Well done !$RESET\n"
 	fi
+	sleep 3
 }
+
+function optitest()
+{
+	BIGGEST=0
+	for NBR in `seq 1 100`;
+	do
+		LIST=$(perl -e "use List::Util 'shuffle'; my @out = (shuffle 0..$1)[0..$1]; print \"@out\"")
+		set -v
+		ARG=${LIST[@]}; ./push_swap $ARG > output.txt ; cat output.txt | ./checker $ARG > /dev/null
+		RESULT=$(wc -l < "output.txt")
+		if [[ $BIGGEST -lt RESULT ]]
+		then
+			BIGGEST=$RESULT
+		fi
+		let "O_RET+=RESULT"
+	done
+	let "O_RET=$O_RET/100"
+	sleep 3
+}
+
 if [[ $# -eq 0 ]]
 then
 	compil
-	basetest 0 10
-    printf $BOLDCYAN"You can use : $BOLDRED\"bash push_swap_tester.sh [start][end]\"$BOLDCYAN if you want to specify the range$RESET\n"
+	basetest 0 100
+	printf $BOLDCYAN"You can use : $BOLDRED\"bash push_swap_tester.sh [start][end]\"$BOLDCYAN if you want to specify the range$RESET\n"
+	printf $BOLDYELLOW"Begin optimisation test$RESET\n"
+	if [[ $NBR_ERROR != 0 ]]
+	then
+		exit 1
+	fi
+	optitest 2
+	printf $BOLDBLUE"\nFor size = 3 : Average = $O_RET and biggest = $BIGGEST !$RESET\n"
+	if [[ $BIGGEST -gt 3 ]]
+	then
+		printf $BOLDRED"Fail optimisation test with size = 3. You must have 3 instruction max$RESET\n"
+	else
+		printf $BOLDGREEN"Good optimisation with size = 3.$RESET\n"
+	fi
+	optitest 4
+	printf $BOLDBLUE"\nFor size = 5 : Average = $O_RET and biggest = $BIGGEST !$RESET\n"
+	if [[ $BIGGEST -gt 12 ]]
+	then
+		printf $BOLDRED"Fail optimisation test with size = 5. You must have 12 instruction max$RESET\n"
+	else
+		printf $BOLDGREEN"Good optimisation with size = 5.$RESET\n"
+	fi
+	optitest 99
+	printf $BOLDBLUE"\nFor size = 100 : Average = $O_RET and biggest = $BIGGEST !$RESET\n"
+	if [[ $O_RET -lt 700 ]]
+	then
+		printf $BOLDGREEN"Considering the barem, you have 5/5 with size = 100\n$RESET"
+	elif [[ $O_RET -lt 900 ]]
+	then
+		printf $BOLDGREEN"Considering the barem, you have 4/5 with size = 100\n$RESET"
+	elif [[ $O_RET -lt 1100 ]]
+	then	
+		printf $BOLDYELLOW"Considering the barem, you have 3/5 with size = 100\n$RESET"
+	elif [[ $O_RET -lt 1300 ]]
+	then	
+		printf $BOLDYELLOW"Considering the barem, you have 2/5 with size = 100\n$RESET"
+	elif [[ $O_RET -lt 1500 ]]
+	then	
+		printf $BOLDRED"Considering the barem, you have 1/5 with size = 100\n$RESET"
+	fi
+	optitest 499
+	printf $BOLDBLUE"\nFor size = 500 : Average = $O_RET and biggest = $BIGGEST !$RESET\n"
+	if [[ $O_RET -lt 5500 ]]
+	then
+		printf $BOLDGREEN"Considering the barem, you have 5/5 with size = 100\n$RESET"
+	elif [[ $O_RET -lt 7000 ]]
+	then	
+		printf $BOLDGREEN"Considering the barem, you have 4/5 with size = 100\n$RESET"
+	elif [[ $O_RET -lt 8500 ]]
+	then	
+		printf $BOLDYELLOW"Considering the barem, you have 3/5 with size = 100\n$RESET"
+	elif [[ $O_RET -lt 10000 ]]
+	then	
+		printf $BOLDYELLOW"Considering the barem, you have 2/5 with size = 100\n$RESET"
+	elif [[ $O_RET -lt 11500 ]]
+	then	
+		printf $BOLDRED"Considering the barem, you have 1/5 with size = 100\n$RESET"
+	fi
     exit 0
 fi
+
 if [[ $# -ne 2 ]] 
 then
-    printf $BOLDRED"Wrong number of elements !\nUsage = \"bash push_swap_tester.sh [start][end]\"$RESET\n"
+    printf $BOLDRED"Wrong number of elements !\nUsage = \"bash push_swap_tester.sh\" for all test \nOr Usage = \"bash push_swap_tester.sh [start][end]\" if you want to specify a range$RESET\n"
     exit 0
 fi
 compil
