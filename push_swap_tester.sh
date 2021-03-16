@@ -53,9 +53,8 @@ function basetest()
 		set -v
 		ARG=${LIST[@]}; ./push_swap $ARG > output.txt ; cat output.txt | ./checker $ARG > result_checker.txt
 		INSTRUCT=$(wc -l < "output.txt")
-		RET=$?
 		value=$(<result_checker.txt)
-		if [[ $value = "KO" ]] 
+		if [[ $value = "KO" ]]
 		then
 			printf $BOLDRED"Fail$RESET"" in $BOLDRED$INSTRUCT$RESET instructions with size = $TOTAL$NBR/$2$RESET\n"
 			echo "LIST = "${LIST[@]}
