@@ -51,10 +51,11 @@ function basetest()
 		INSTRUCT=0
 		LIST=$(perl -e "use List::Util 'shuffle'; my @out = (shuffle 0..$NBR)[0..$NBR]; print \"@out\"")
 		set -v
-		ARG=${LIST[@]}; ./push_swap $ARG > output.txt ; cat output.txt | ./checker $ARG > /dev/null
+		ARG=${LIST[@]}; ./push_swap $ARG > output.txt ; cat output.txt | ./checker $ARG > result_checker.txt
 		INSTRUCT=$(wc -l < "output.txt")
 		RET=$?
-		if [[ $RET != 0 ]] 
+		value=$(<result_checker.txt)
+		if [[ $value = "KO" ]] 
 		then
 			printf $BOLDRED"Fail$RESET"" in $BOLDRED$INSTRUCT$RESET instructions with size = $TOTAL$NBR/$2$RESET\n"
 			echo "LIST = "${LIST[@]}
