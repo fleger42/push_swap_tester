@@ -51,10 +51,17 @@ function basetest()
 		INSTRUCT=0
 		LIST=$(perl -e "use List::Util 'shuffle'; my @out = (shuffle 0..$NBR)[0..$NBR]; print \"@out\"")
 		set -v
-		ARG=${LIST[@]}; ./push_swap $ARG > output.txt ; cat output.txt | ./checker $ARG > result_checker.txt
+		ARG=${LIST[@]}; ./push_swap $ARG > output.txt ; cat output.txt | ./checker $ARG > result_checker.txt ; cat output.txt | ./srcs/ref_checker $ARG > result_checker2.txt
 		INSTRUCT=$(wc -l < "output.txt")
 		value=$(<result_checker.txt)
-		if [[ $value = "KO" ]]
+		value_2=$(<result_checker2.txt)
+		echo $value $value_2
+		if [[ "$value" != "$value_2" ]]
+		then
+			printf $BOLDRED"Your checker output $value instead of $value_2 !\nFail$RESET"" in $BOLDRED$INSTRUCT$RESET instructions with size = $TOTAL$NBR/$2$RESET\n"
+			echo "LIST = "${LIST[@]}
+			let "NBR_ERROR=NBR_ERROR+1"
+		elif [[ $value = "KO" ]]
 		then
 			printf $BOLDRED"Fail$RESET"" in $BOLDRED$INSTRUCT$RESET instructions with size = $TOTAL$NBR/$2$RESET\n"
 			echo "LIST = "${LIST[@]}
