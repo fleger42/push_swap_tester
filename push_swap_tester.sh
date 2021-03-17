@@ -55,7 +55,6 @@ function basetest()
 		INSTRUCT=$(wc -l < "output.txt")
 		value=$(<result_checker.txt)
 		value_2=$(<result_checker2.txt)
-		echo $value $value_2
 		if [[ "$value" != "$value_2" ]]
 		then
 			printf $BOLDRED"Your checker output $value instead of $value_2 !\nFail$RESET"" in $BOLDRED$INSTRUCT$RESET instructions with size = $TOTAL$NBR/$2$RESET\n"
