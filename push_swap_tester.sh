@@ -130,7 +130,13 @@ function optitest()
 
 function exec()
 {
-	./push_swap "$1" 2> output.txt ; cat output.txt | ./checker "$1" 2> result_checker.txt ; cat output.txt | ./srcs/ref_checker "$1" 2> result_checker2.txt
+	rm output.txt
+	rm result_checker.txt
+	rm result_checker2.txt
+	RESULT=0
+	value=0
+	value_2=0
+	./push_swap $1 > /dev/null 2> output.txt ; cat output.txt | ./checker $1 > /dev/null 2> result_checker.txt ; cat output.txt | ./srcs/ref_checker $1 > /dev/null 2> result_checker2.txt
 	RESULT=$(<output.txt)
 	value=$(<result_checker.txt)
 	value_2=$(<result_checker2.txt)
@@ -154,7 +160,6 @@ function errortest()
 	printf $BOLDYELLOW"Begin error test$RESET\n"
 	sleep 3
 	printf $BOLDCYAN"\nNo args$RESET\n"
-	exec ""
 	exec
 	printf $BOLDCYAN"\nWith alpha char$RESET\n"
 	exec "1 2 3 6 4 a"
