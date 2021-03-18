@@ -130,7 +130,7 @@ function optitest()
 
 function exec()
 {
-	./push_swap "$1" > output.txt 2>> output.txt ; cat output.txt | ./checker "$1" > result_checker.txt 2>> result_checker.txt ; cat output.txt | ./srcs/ref_checker "$1" > result_checker2.txt 2> result_checker2.txt
+	./push_swap "$1" 2> output.txt ; cat output.txt | ./checker "$1" 2> result_checker.txt ; cat output.txt | ./srcs/ref_checker "$1" 2> result_checker2.txt
 	RESULT=$(<output.txt)
 	value=$(<result_checker.txt)
 	value_2=$(<result_checker2.txt)
@@ -162,7 +162,7 @@ function errortest()
 	exec "1 2 3 4 A"
 	exec "A"
 	printf $BOLDCYAN"\nWith value > int$RESET\n"
-	exec "\"1 2 3 4 2147483647\""
+	exec "1 2 3 4 2147483647"
 	exec "1 2 3 4 2147483648"
 	exec "1 2 3 4 -2147483647"
 	exec "1 2 3 4 -2147483648"
