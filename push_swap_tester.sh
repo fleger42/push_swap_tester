@@ -21,12 +21,12 @@ BOLDWHITE="\033[1m\033[37m"
 function compil()
 {
 	printf $BOLDYELLOW"Compiling your push_swap and checker...$RESET\n"
-	rm -f push_swap checker
+	rm -f push_swap
 	make re -C ../ >/dev/null 2>&1
-	cp ../push_swap ../checker . >/dev/null 2>&1
-	chmod 755 push_swap >/dev/null 2>&1
+	cp ../push_swap . >/dev/null 2>&1
 	chmod 755 checker >/dev/null 2>&1
-	if [[ ! -e push_swap ]] || [[ ! -e checker ]]
+	chmod 755 push_swap >/dev/null 2>&1
+	if [[ ! -e push_swap ]]
 	then
 		printf $BOLDRED"Compiling failed ! Dont forget you have to clone this folder in the root of your project$RESET\n"
 		exit 0
@@ -52,16 +52,10 @@ function basetest()
 		INSTRUCT=0
 		LIST=$(perl -e "use List::Util 'shuffle'; my @out = (shuffle 0..$NBR)[0..$NBR]; print \"@out\"")
 		set -v
-		ARG=${LIST[@]}; ./push_swap $ARG > output.txt ; cat output.txt | ./checker $ARG > result_checker.txt ; cat output.txt | ./srcs/ref_checker $ARG > result_checker2.txt
+		ARG=${LIST[@]}; ./push_swap $ARG > output.txt ; cat output.txt | ./checker $ARG > result_checker.txt
 		INSTRUCT=$(wc -l < "output.txt")
 		value=$(<result_checker.txt)
-		value_2=$(<result_checker2.txt)
-		if [[ "$value" != "$value_2" ]]
-		then
-			printf $BOLDRED"Your checker output $value instead of $value_2 !\nFail$RESET"" in $BOLDRED$INSTRUCT$RESET instructions with size = $TOTAL$NBR/$2$RESET\n"
-			echo "LIST = "${LIST[@]}
-			let "NBR_ERROR=NBR_ERROR+1"
-		elif [[ $value = "KO" ]]
+		if [[ $value = "KO" ]]
 		then
 			printf $BOLDRED"Fail$RESET"" in $BOLDRED$INSTRUCT$RESET instructions with size = $TOTAL$NBR/$2$RESET\n"
 			echo "LIST = "${LIST[@]}
@@ -109,11 +103,10 @@ function optitest()
 	do
 		LIST=$(perl -e "use List::Util 'shuffle'; my @out = (shuffle 0..$1)[0..$1]; print \"@out\"")
 		set -v
-		ARG=${LIST[@]}; ./push_swap $ARG > output.txt ; cat output.txt | ./checker $ARG > result_checker.txt ; cat output.txt | ./srcs/ref_checker $ARG > result_checker2.txt
+		ARG=${LIST[@]}; ./push_swap $ARG > output.txt ; cat output.txt | ./checker $ARG > result_checker.txt
 		RESULT=$(wc -l < "output.txt")
 		value=$(<result_checker.txt)
-		value_2=$(<result_checker2.txt)
-		if [[ "$value" != "$value_2" ]] || [[ $value = "KO" ]]
+		if [[ $value = "KO" ]]
 		then
 			printf $BOLDRED"Failed optitest with list = $RESET$ARG\n"
 			exit 1
@@ -132,21 +125,15 @@ function exec()
 {
 	rm output.txt
 	rm result_checker.txt
-	rm result_checker2.txt
 	RESULT=0
 	value=0
 	value_2=0
-	./push_swap $1 > /dev/null 2> output.txt ; cat output.txt | ./checker $1 > /dev/null 2> result_checker.txt ; cat output.txt | ./srcs/ref_checker $1 > /dev/null 2> result_checker2.txt
+	./push_swap $1 > /dev/null 2> output.txt ; cat output.txt | ./checker $1 > /dev/null 2> result_checker.txt
 	RESULT=$(<output.txt)
 	value=$(<result_checker.txt)
-	value_2=$(<result_checker2.txt)
-	if [[ "$value" != "$value_2" ]]
+	if [[ "$RESULT" != "$value" ]]
 	then
-		printf $BOLDRED"\nYour checker output "$value" instead of "$value_2" ! Failed error test with list = $RESET"
-		echo \["$1"\]
-	elif [[ "$RESULT" != "$value_2" ]]
-	then
-		printf $BOLDRED"\nYour push_swap output "$RESULT" instead of "$value_2" ! Failed error test with list = $RESET"
+		printf $BOLDRED"\nYour push_swap output "$RESULT" instead of "$value" ! Failed error test with list = $RESET"
 		echo \["$1"\]
 	else
 		printf $BOLDGREEN"\nSuccess error test with list = $RESET"
@@ -186,11 +173,11 @@ then
 	compil
 	basetest 0 100
 	printf $BOLDCYAN"You can use : $BOLDRED\"bash push_swap_tester.sh [start][end]\"$BOLDCYAN if you want to specify the range$RESET\n"
-	printf $BOLDYELLOW"Begin optimisation test$RESET\n"
 	if [[ $NBR_ERROR != 0 ]]
 	then
 		exit 1
 	fi
+	printf $BOLDYELLOW"Begin optimisation test$RESET\n"
 	optitest 2
 	printf $BOLDCYAN"\nFor size = 3 : Average = $O_RET and biggest = $BIGGEST !$RESET\n"
 	if [[ $BIGGEST -gt 3 ]]
